@@ -1,6 +1,7 @@
 /* ============================================================
    MAIN · Estado, interacción y arranque
    · Con buscador de Pokémon
+   · Con pestañas Draft / Map Planner
 ============================================================ */
 (function(){
   var POKEMON = window.DraftSim.POKEMON;
@@ -160,6 +161,35 @@
     render();
   }
 
+  /* ------------------------------------------------------------
+     PESTAÑAS (Draft / Planner)   ← NUEVO
+  ------------------------------------------------------------ */
+  function initTabs(){
+    var tabs = document.querySelectorAll('.nav-tab');
+    var viewDraft   = document.getElementById('viewDraft');
+    var viewPlanner = document.getElementById('viewPlanner');
+    if (!tabs.length || !viewDraft || !viewPlanner) return;
+
+    tabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        tabs.forEach(function(t){ t.classList.remove('on'); });
+        tab.classList.add('on');
+
+        if (tab.dataset.view === 'planner'){
+          viewDraft.hidden = true;
+          viewPlanner.hidden = false;
+          if (window.DraftSim.Planner){
+            window.DraftSim.Planner.init();
+            setTimeout(function(){ window.DraftSim.Planner.resize(); }, 80);
+          }
+        } else {
+          viewPlanner.hidden = true;
+          viewDraft.hidden = false;
+        }
+      });
+    });
+  }
+
   function bindEvents(){
     document.getElementById('grid').addEventListener('click', function(e){
       var poke = e.target.closest('.poke');
@@ -203,6 +233,9 @@
         });
       });
     }
+
+    // Pestañas
+    initTabs();
   }
 
   function init(){
