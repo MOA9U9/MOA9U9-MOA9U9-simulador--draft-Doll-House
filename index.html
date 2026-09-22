@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0b0713">
-<title>Pokémon Unite · Draft </title>
+<title>Pokémon Unite · Draft Inteligente</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -12,23 +12,27 @@
 
 <header>
   <h1>Pokémon Unite · Draft</h1>
-  <div class="sub">Picks, bans y ítems</div>
+  <div class="sub">Asistente competitivo · Picks, bans, ítems y estadísticas</div>
 </header>
 
-<main class="layout">
+<nav class="main-nav">
+  <button class="nav-tab on" data-view="draft">🎯 Draft</button>
+  <button class="nav-tab" data-view="planner">🗺️ Map Planner</button>
+</nav>
 
-  <!-- Columna izquierda: draft -->
+<!-- ================= VISTA DRAFT ================= -->
+<main class="layout" id="viewDraft">
+
   <section class="draft-col">
-
     <div class="controls">
       <div class="controls-header">
-        <span class="controls-label">🖐 MODO LIBRE COMO  DH·MOA</span>
+        <span class="controls-label">🖐 MODO LIBRE</span>
         <button class="reset-btn" id="clearBtn">↻ Limpiar</button>
       </div>
       <div class="free-hint">
         <span class="step">1</span> Toca un Pokémon para armarlo.
         <span class="step">2</span> Toca la casilla destino (pick o ban).
-        <span class="step">3</span> Toca  en el boton de cerrar de una casilla ocupada para vaciarla.
+        <span class="step">3</span> Toca una casilla ocupada para vaciarla.
       </div>
     </div>
 
@@ -49,11 +53,9 @@
       <div class="grid" id="grid"></div>
     </div>
 
-    <!-- Resumen final -->
     <div class="summary" id="summary" hidden></div>
   </section>
 
-  <!-- Columna derecha: asistente -->
   <aside class="assistant-col" id="assistant">
     <div class="assistant-header">
       <span class="assistant-title">🤖 ASISTENTE</span>
@@ -65,10 +67,43 @@
 
 </main>
 
+<!-- ================= VISTA PLANNER ================= -->
+<main class="planner-layout" id="viewPlanner" hidden>
+
+  <aside class="planner-sidebar">
+    <h2>Pokémon</h2>
+    <input type="search" id="plannerSearch" class="planner-search" placeholder="🔍 Buscar..." autocomplete="off">
+    <div class="planner-pokemon-list" id="plannerPokemonList"></div>
+  </aside>
+
+  <div class="planner-canvas-wrap">
+    <div class="planner-toolbar" id="plannerToolbar">
+      <button type="button" data-tool="select" class="on" title="Seleccionar / Mover">🖐</button>
+      <button type="button" data-tool="pen" title="Dibujar trazo">✏️</button>
+      <button type="button" data-tool="arrow" title="Flecha">➡️</button>
+      <button type="button" data-tool="erase" title="Borrar trazo">🧹</button>
+    </div>
+    <div class="planner-map-select-wrap">
+      <select id="plannerMapSelect" class="planner-map-select"></select>
+    </div>
+    <div class="planner-topright">
+      <button type="button" id="plannerUndo" class="planner-undo-btn" title="Deshacer" disabled>↶</button>
+      <button type="button" id="plannerClear" class="planner-trash-btn" title="Limpiar todo">🗑️</button>
+    </div>
+    <div id="plannerCanvasContainer"></div>
+    <div class="planner-hint">
+      Toca un Pokémon y luego toca el mapa para colocarlo · Arrastra para mover · Doble toque para eliminar · Usa ↶ para deshacer
+    </div>
+  </div>
+
+</main>
+
+<script src="https://unpkg.com/konva@9/konva.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/matchups.js"></script>
 <script src="js/analyzer.js"></script>
 <script src="js/ui.js"></script>
+<script src="js/planner.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
