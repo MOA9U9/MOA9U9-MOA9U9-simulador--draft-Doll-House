@@ -4,8 +4,7 @@
    · Lista lateral formato fila
    · Botón deshacer con stack de acciones
    · Drag & drop libre de Pokémon colocados
-   · Correcciones: draggable según tool, dibujo sobre pokemon,
-     dblclick solo en select, initStage con retry
+   · Optimizado para compatibilidad con Brave Shield
 ============================================================ */
 window.DraftSim = window.DraftSim || {};
 
@@ -70,7 +69,7 @@ window.DraftSim = window.DraftSim || {};
   }
 
   /* ------------------------------------------------------------
-     INICIALIZAR STAGE (con retry si dimensiones = 0)
+     INICIALIZAR STAGE
   ------------------------------------------------------------ */
   function initStage(retries){
     retries = retries || 0;
@@ -83,13 +82,14 @@ window.DraftSim = window.DraftSim || {};
     var width  = wrap.clientWidth;
     var height = wrap.clientHeight;
 
-    /* Retry si el contenedor aún no tiene tamaño (ej. cambio rápido de pestaña) */
     if ((width === 0 || height === 0) && retries < 25) {
       setTimeout(function(){ initStage(retries + 1); }, 60);
       return;
     }
-    /* Fallback por si acaso */
     if (width === 0 || height === 0) { width = 800; height = 500; }
+
+    // Asegurar que el canvas no bloquee los botones
+    container.style.zIndex = '1';
 
     stage = new Konva.Stage({
       container: 'plannerCanvasContainer',
@@ -148,7 +148,7 @@ window.DraftSim = window.DraftSim || {};
   }
 
   /* ------------------------------------------------------------
-     CARGAR MAPA (contain, siempre completo)
+     CARGAR MAPA
   ------------------------------------------------------------ */
   function loadMap(key){
     var mapData = MAPS[key];
@@ -160,6 +160,7 @@ window.DraftSim = window.DraftSim || {};
 
     var img = new Image();
     img.crossOrigin = 'Anonymous';
+    img.referrerPolicy = 'no-referrer'; // Ayuda a saltar el bloqueo de Brave
     img.onload = function(){
       if (!stage) return;
       var w = stage.width();
@@ -218,29 +219,33 @@ window.DraftSim = window.DraftSim || {};
   }
 
   /* ------------------------------------------------------------
-     AÑADIR POKÉMON (DRAGGABLE según tool actual)
+     AÑADIR POKÉMON (CORREGIDO PARA BRAVE SHIELD)
   ------------------------------------------------------------ */
   function addPokemonToMap(pokemon, x, y){
     var group = new Konva.Group({
       x: x, y: y,
-      draggable: (currentTool === 'select'),   // CORREGIDO: depende del tool
+      draggable: (currentTool === 'select'),
+      dragDistance: 5, 
       name: 'pokemonGroup'
     });
 
-    /* Halo (área de hit grande y cómoda para móvil) */
-    group.add(new Konva.Circle({
-      radius: 28,
-      fill: 'rgba(11, 7, 19, 0.9)',
+    /* Área de toque grande y sólida */
+    group.add(new Konva.Rect({
+      x: -32, y: -32,
+      width: 64, height: 64,
+      fill: 'rgba(11, 7, 19, 0.95)', 
       stroke: '#ff7a1a',
       strokeWidth: 2,
-      hitStrokeWidth: 14,
+      cornerRadius: 12,
       listening: true,
-      name: 'hitArea'
+      name: 'hitArea',
+      perfectDrawEnabled: false
     }));
 
     /* Sprite */
     var img = new Image();
     img.crossOrigin = 'Anonymous';
+    img.referrerPolicy = 'no-referrer'; // Crucial para que Brave Shield no bloquee el sprite
     img.onload = function(){
       if (!stage) return;
       group.add(new Konva.Image({
@@ -262,7 +267,8 @@ window.DraftSim = window.DraftSim || {};
         fill: '#ece6f5',
         align: 'center',
         width: 40, offsetX: 20, y: -16,
-        listening: false
+        listening: false,
+        perfectDrawEnabled: false
       }));
       pokemonLayer.batchDraw();
     };
@@ -278,20 +284,22 @@ window.DraftSim = window.DraftSim || {};
       align: 'center',
       width: 100,
       offsetX: 50,
-      y: 32,
+      y: 36,
       listening: false,
+      perfectDrawEnabled: false,
       shadowColor: '#000',
       shadowBlur: 4
     }));
 
-    /* Al arrastrar, subir al frente */
+    /* Al arrastrar, subir al frente (Sin preventDefault para no despertar sospechas de Brave) */
     group.on('dragstart', function(){
       this.moveToTop();
       pokemonLayer.draw();
     });
 
-    /* Doble toque para eliminar — SOLO en modo select */
-    group.on('dblclick dbltap', function(){
+    /* Doble toque para eliminar */
+    group.on('dblclick dbltap', function(e){
+      e.cancelBubble = true;
       if (currentTool !== 'select') return;
       var g = this;
       g.remove();
@@ -305,7 +313,6 @@ window.DraftSim = window.DraftSim || {};
     pokemonLayer.add(group);
     pokemonLayer.draw();
 
-    /* Undo: destruir el grupo */
     pushUndo(function(){
       group.destroy();
       pokemonLayer.draw();
@@ -313,7 +320,7 @@ window.DraftSim = window.DraftSim || {};
   }
 
   /* ------------------------------------------------------------
-     DIBUJO (lápiz y flecha) — funciona sobre cualquier área
+     DIBUJO (lápiz y flecha)
   ------------------------------------------------------------ */
   function initDrawing(){
     var isPointerDown = false;
@@ -321,9 +328,7 @@ window.DraftSim = window.DraftSim || {};
     var currentShape = null;
 
     stage.on('mousedown touchstart', function(e){
-      /* Solo activo con lápiz o flecha */
       if (currentTool !== 'pen' && currentTool !== 'arrow') return;
-      /* Si el tool es select/erase no aplica */
       if (isPointerDown) return;
 
       isPointerDown = true;
@@ -338,7 +343,8 @@ window.DraftSim = window.DraftSim || {};
           points: [startPoint.x, startPoint.y],
           lineCap: 'round',
           lineJoin: 'round',
-          listening: true
+          listening: true,
+          hitStrokeWidth: 20 
         });
       } else {
         shape = new Konva.Arrow({
@@ -349,13 +355,13 @@ window.DraftSim = window.DraftSim || {};
           pointerLength: 12,
           pointerWidth: 12,
           lineCap: 'round',
-          listening: true
+          listening: true,
+          hitStrokeWidth: 20 
         });
       }
       drawLayer.add(shape);
       currentShape = shape;
 
-      /* Undo de este trazo */
       pushUndo(function(){
         shape.destroy();
         drawLayer.draw();
@@ -392,14 +398,15 @@ window.DraftSim = window.DraftSim || {};
     buttons.forEach(function(btn){
       if (btn.dataset.bound) return;
       btn.dataset.bound = '1';
-      btn.addEventListener('click', function(){
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); 
         buttons.forEach(function(b){ b.classList.remove('on'); });
         btn.classList.add('on');
         currentTool = btn.dataset.tool;
         armedPokemon = null;
         updateCursor();
         highlightArmed();
-        /* Actualizar draggable según herramienta */
+        
         if (pokemonLayer) {
           pokemonLayer.getChildren().forEach(function(g){
             g.draggable(currentTool === 'select');
@@ -416,7 +423,7 @@ window.DraftSim = window.DraftSim || {};
       undoBtn.addEventListener('click', undo);
     }
 
-    /* Limpiar todo (con undo) */
+    /* Limpiar todo */
     var clearBtn = document.getElementById('plannerClear');
     if (clearBtn && !clearBtn.dataset.bound) {
       clearBtn.dataset.bound = '1';
@@ -486,7 +493,7 @@ window.DraftSim = window.DraftSim || {};
   }
 
   /* ------------------------------------------------------------
-     LISTA DE POKÉMON (formato fila: sprite + nombre + rol)
+     LISTA DE POKÉMON
   ------------------------------------------------------------ */
   function renderPokemonList(filter){
     var listEl = document.getElementById('plannerPokemonList');
@@ -501,7 +508,7 @@ window.DraftSim = window.DraftSim || {};
     listEl.innerHTML = list.map(function(p){
       return '<div class="planner-pokemon-item" draggable="true" data-name="' + p.n + '">'
            +   '<img src="' + SPRITE_URL(p.id) + '" alt="' + p.n + '" loading="lazy" '
-           +     'onerror="this.style.opacity=0.2;">'
+           +     'onerror="this.style.opacity=0.2;" referrerpolicy="no-referrer">'
            +   '<span class="planner-item-name">' + p.n + '</span>'
            +   '<span class="planner-item-role">' + p.r + '</span>'
            + '</div>';
