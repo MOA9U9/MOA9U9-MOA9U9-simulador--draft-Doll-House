@@ -12,7 +12,8 @@ window.DraftSim = window.DraftSim || {};
     "Pikachu","Raichu","Gardevoir","Chandelure","Espeon","Glaceon",
     "Sylveon","Delphox","Ninetales","Cramorant","Mew","Miraidon",
     "Armarouge","Suicune","Zapdos","Mega Mewtwo Y","Latios","Typhlosion",
-    "Moltres","Reshiram","Skeledirge","Yveltal","Alcremie"
+    "Moltres","Reshiram","Skeledirge","Yveltal","Alcremie",
+    "Toxtricity", "Jolteon", "Galarian Rapidash"
   ];
 
   var CC_HEAVY = [
