@@ -2,7 +2,7 @@
    DATOS · Pokémon Unite
    Winrates/Pickrates/Banrates: uniteapi.dev (2026-09-20)
    Roles, builds e ítems: unite-db.com
-   100 Pokémon · 286 builds · 133,492 partidas
+   103 Pokémon · builds · partidas
 ============================================================ */
 window.DraftSim = window.DraftSim || {};
 
@@ -168,6 +168,13 @@ window.DraftSim.POKEMON = [
     strong:["Snorlax","Blastoise","Crustle"], weak:["Zeraora","Absol","Talonflame"],
     builds:[{"name":"Bolt Cannon", "moves":["Thunderbolt", "Zap Cannon"],"items":["Energy Amplifier", "Drive Lens", "Wise Glasses", "Eject Button"]}] },
 
+  { n:"Toxtricity", r:"Attacker", id:849, wr:50.1, pr:8.2, br:4.1,
+    strong:["Snorlax","Blastoise","Crustle"], weak:["Zeraora","Absol","Talonflame"],
+    builds:[
+      {"name":"Standard Sp. Atk", "moves":["Overdrive","Shift Gear"],"items":["Wise Glasses", "Slick Spoon", "Drive Lens", "Eject Button"]},
+      {"name":"Attack-Damage", "moves":["Overdrive","Venom Distortion"],"items":["Muscle Band", "Scope Lens", "Rapid Fire Scarf", "Eject Button"]}
+    ] },
+
   /* ============ DEFENDERS ============ */
   { n:"Articuno", r:"Defender", id:144, wr:49.8, pr:10.6, br:3.6,
     strong:["Greninja","Cinderace","Pikachu"], weak:["Lucario","Urshifu","Zacian"],
@@ -315,6 +322,13 @@ window.DraftSim.POKEMON = [
   { n:"Feraligatr", r:"All-Rounder", id:160, wr:48.9, pr:6.5, br:17.7,
     strong:["Blissey","Eldegoss","Comfey"], weak:["Greninja","Cinderace","Pikachu"],
     builds:[{"name":"Waterfall Crunch", "moves":["Crunch", "Waterfall"],"items":["Razor Claw", "Attack Weight", "Accel Bracer", "Full Heal"]}] },
+
+  { n:"Flareon", r:"All-Rounder", id:136, wr:50.4, pr:6.8, br:2.9,
+    strong:["Blissey","Eldegoss","Comfey"], weak:["Greninja","Cinderace","Pikachu"],
+    builds:[
+      {"name":"Heat Crash", "moves":["Flame Charge","Fire Spin"],"items":["Attack Weight", "Weakness Policy", "Razor Claw", "Full Heal"]},
+      {"name":"Body Heat", "moves":["Flare Blitz","Superpower"],"items":["Muscle Band", "Scope Lens", "Focus Band", "Eject Button"]}
+    ] },
 
   { n:"Garchomp", r:"All-Rounder", id:445, wr:51.9, pr:4.7, br:0.2,
     strong:["Blissey","Eldegoss","Comfey"], weak:["Greninja","Cinderace","Pikachu"],
@@ -481,6 +495,13 @@ window.DraftSim.POKEMON = [
     builds:[{"name":"Shadow Eater", "moves":["Dream Eater", "Shadow Ball"],"items":["Wise Glasses", "Drive Lens", "Choice Specs", "Eject Button"]},
       {"name":"Sludge Hex", "moves":["Hex", "Sludge Bomb"],"items":["Drive Lens", "Wise Glasses", "Sp. Atk Specs", "Full Heal"]}] },
 
+  { n:"Jolteon", r:"Speedster", id:135, wr:49.8, pr:7.5, br:3.2,
+    strong:["Greninja","Cinderace","Decidueye"], weak:["Snorlax","Slowbro","Umbreon"],
+    builds:[
+      {"name":"Jolt Counter", "moves":["Thunderbolt","Discharge"],"items":["Razor Claw", "Scope Lens", "Accel Bracer", "Eject Button"]},
+      {"name":"Speed Burst", "moves":["Pin Missile","Agility"],"items":["Attack Weight", "Razor Claw", "Charging Charm", "Full Heal"]}
+    ] },
+
   { n:"Leafeon", r:"Speedster", id:470, wr:46.9, pr:8.3, br:0.8,
     strong:["Greninja","Cinderace","Decidueye"], weak:["Snorlax","Slowbro","Umbreon"],
     builds:[{"name":"Razor Ace", "moves":["Razor Leaf", "Aerial Ace"],"items":["Razor Claw", "Energy Amplifier", "Attack Weight", "X Attack"]},
@@ -500,11 +521,14 @@ window.DraftSim.POKEMON = [
       {"name":"Fury Assurance", "moves":["Fury Swipes", "Assurance"],"items":["Attack Weight", "Accel Bracer", "Energy Amplifier", "Full Heal"]},
       {"name":"Pay Attack", "moves":["Pay Day", "Feint Attack"],"items":["Attack Weight", "Accel Bracer", "Energy Amplifier", "Eject Button"]}] },
 
-  { n:"Morpeko", r:"Speedster", id:877, wr:50, pr:0, br:0,
+  { n:"Morpeko", r:"Speedster", id:877, wr:51.2, pr:9.1, br:5.5,
     strong:["Greninja","Cinderace","Decidueye"], weak:["Snorlax","Slowbro","Umbreon"],
-    builds:[] },
+    builds:[
+      {"name":"Burst Damage", "moves":["Spark","Power Trip"],"items":["Attack Weight", "Charging Charm", "Accel Bracer", "Eject Button"]},
+      {"name":"Max Mobility", "moves":["Spark","Aura Wheel"],"items":["Float Stone", "Charging Charm", "Razor Claw", "Eject Button"]}
+    ] },
 
-  { n:"Rapidash", r:"Speedster", id:78, wr:51.9, pr:5, br:0.7,
+  { n:"Galarian Rapidash", r:"Speedster", id:10163, wr:51.9, pr:5, br:0.7,
     strong:["Greninja","Cinderace","Decidueye"], weak:["Snorlax","Slowbro","Umbreon"],
     builds:[{"name":"Dazzling Strike", "moves":["Dazzling Gleam", "Smart Strike"],"items":["Wise Glasses", "Shell Bell", "Sp. Atk Specs", "Full Heal"]},
       {"name":"Agility Wind", "moves":["Fairy Wind", "Agility"],"items":["Wise Glasses", "Shell Bell", "Sp. Atk Specs", "Full Heal"]},
@@ -604,6 +628,6 @@ window.DraftSim.POKEMON = [
     strong:["Machamp","Buzzwole","Tyranitar"], weak:["Greninja","Cinderace","Talonflame"],
     builds:[{"name":"Dazzling Song (Disruptor)", "moves":["Sing", "Dazzling Gleam"],"items":["Focus Band", "Resonant Guard", "Muscle Band", "Eject Button"]},
       {"name":"Dazzling Song (Protector)", "moves":["Sing", "Dazzling Gleam"],"items":["Resonant Guard", "Exp Share", "Focus Band", "Eject Button"]},
-      {"name":"Roll Slap", "moves":["Rollout", "Double Slap"],"items":["Resonant Guard", "Focus Band", "Buddy Barrier", "Eject Button"]}] },
+      {"name":"Roll Slap", "moves":["Rollout", "Double Slap"],"items":["Resonant Guard", "Focus Band", "Buddy Barrier", "Eject Button"]}] }
 
 ];
